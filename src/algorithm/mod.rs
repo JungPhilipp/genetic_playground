@@ -1,4 +1,6 @@
-pub fn run<T, I: Ord>(
+use log::{debug, info};
+
+pub fn run<T: std::fmt::Debug, I: Ord + std::fmt::Display + std::fmt::Debug>(
     initial_population: Vec<T>,
     fitness_function: &dyn Fn(&T) -> I,
     is_converged: &dyn Fn(&Vec<I>) -> bool,
@@ -12,7 +14,14 @@ pub fn run<T, I: Ord>(
         .iter()
         .map(|specimen| fitness_function(specimen))
         .collect::<Vec<I>>();
+    debug!("Initial Population: {:?}", population);
+    debug!("Initial Population Size: {}", population_size);
+    info!("Initial Fitness: {:?}", fitness);
+    let mut _generation = 0;
     while !is_converged(&fitness) {
+        debug!("Generation: {}", _generation);
+        debug!("Maximum Fitness: {}", fitness.iter().max().unwrap());
+        _generation += 1;
         let selection = selection_function(&population, &fitness);
         population = crossover_function(&selection, population_size);
         mutation_function(&mut population);
@@ -22,5 +31,7 @@ pub fn run<T, I: Ord>(
             .collect::<Vec<I>>();
     }
 
+    info!("Converged Generation: {}", _generation);
+    info!("Converged Fitness: {}", fitness.iter().max().unwrap());
     (population, fitness)
 }

@@ -9,3 +9,6 @@ edition = "2018"
 [dependencies]
 rand = ''
 itertools = ''
+log = {version = "", features = ["release_max_level_warn"]}
+env_logger = ""
+test-env-log = ""

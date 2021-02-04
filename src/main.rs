@@ -7,8 +7,7 @@ mod algorithm;
 
 fn is_converged(specimens: &Vec<u32>) -> bool {
     let max = specimens.iter().max().unwrap();
-    println!("{}", max);
-    return (*max as i64 - 50).abs() < 2;
+    (500 - *max as i64).abs() < 2
 }
 
 fn selection_function(specimens: &Vec<i32>, selection: &Vec<u32>) -> Vec<i32> {
@@ -45,12 +44,13 @@ fn crossover_function(selection: &Vec<i32>, population_count: usize) -> Vec<i32>
 fn mutation_function(_population: &mut Vec<i32>) {}
 
 fn fitness_function(specimen: &i32) -> u32 {
-    (50 - specimen).abs() as u32
+    (500 - (500 - specimen).abs()) as u32
 }
 
 fn main() {
+    env_logger::init();
     let range = Uniform::from(0..100);
-    let initial_population: Vec<i32> = rand::thread_rng().sample_iter(&range).take(1000).collect();
+    let initial_population: Vec<i32> = rand::thread_rng().sample_iter(&range).take(10).collect();
     run::<i32, u32>(
         initial_population,
         &fitness_function,

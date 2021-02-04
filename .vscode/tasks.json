@@ -8,7 +8,12 @@
 				"$rustc"
 			],
 			"group": "build",
-			"label": "rust: cargo run"
+			"label": "rust: cargo run",
+			"options": {
+				"env": {
+					"RUST_LOG": "debug"
+				}
+			}
 		},
 		{
 			"type": "cargo",
