@@ -1,4 +1,6 @@
+pub mod example0;
 use log::{debug, info};
+use std::{thread, time};
 
 pub fn run<T: std::fmt::Debug, I: Ord + std::fmt::Display + std::fmt::Debug>(
     initial_population: Vec<T>,
@@ -19,8 +21,6 @@ pub fn run<T: std::fmt::Debug, I: Ord + std::fmt::Display + std::fmt::Debug>(
     info!("Initial Fitness: {:?}", fitness);
     let mut _generation = 0;
     while !is_converged(&fitness) {
-        debug!("Generation: {}", _generation);
-        debug!("Maximum Fitness: {}", fitness.iter().max().unwrap());
         _generation += 1;
         let selection = selection_function(&population, &fitness);
         population = crossover_function(&selection, population_size);
@@ -29,9 +29,19 @@ pub fn run<T: std::fmt::Debug, I: Ord + std::fmt::Display + std::fmt::Debug>(
             .iter()
             .map(|specimen| fitness_function(specimen))
             .collect::<Vec<I>>();
+        debug!("Generation: {}", _generation);
+        debug!("Maximum Fitness: {}", fitness.iter().max().unwrap());
+        debug!("{:?} \n {:?}", population, fitness);
     }
 
     info!("Converged Generation: {}", _generation);
-    info!("Converged Fitness: {}", fitness.iter().max().unwrap());
+    info!(
+        "Converged Fitness: {:?}",
+        population
+            .iter()
+            .zip(fitness.iter())
+            .max_by(|(_, lhs), (_, rhs)| lhs.partial_cmp(rhs).unwrap())
+            .unwrap()
+    );
     (population, fitness)
 }
